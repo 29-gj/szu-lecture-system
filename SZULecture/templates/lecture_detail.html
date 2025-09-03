@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>讲座详情 - 深圳大学创新领航讲座</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>讲座详情</h1>
+            <button class="btn-back" onclick="goBack()">返回</button>
+        </header>
+
+        <div class="lecture-detail">
+            <div class="detail-content">
+                <h2>{{ lecture.name }}</h2>
+                <div class="detail-info">
+                    <p><strong>主讲人：</strong>{{ lecture.speaker }}</p>
+                    <p><strong>地点：</strong>{{ lecture.location }}</p>
+                    <p><strong>报名开始时间：</strong>{{ lecture.enroll_start_time }}</p>
+                    <p><strong>讲座开始时间：</strong>{{ lecture.lecture_start_time }}</p>
+                    <p><strong>讲座状态：</strong>
+                        {% if lecture.status == 'enrolling' %}
+                            <span class="status enrolling">正在报名</span>
+                        {% elif lecture.status == 'not_started' %}
+                            <span class="status not-started">未开始</span>
+                        {% elif lecture.status == 'full' %}
+                            <span class="status full">已报满</span>
+                        {% else %}
+                            <span class="status ended">已结束</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="detail-description">
+                    <h3>讲座简介</h3>
+                    <p>{{ lecture.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

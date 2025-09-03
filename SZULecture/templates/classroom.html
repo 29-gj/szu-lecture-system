@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教室选择 - 深圳大学创新领航讲座</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>教室选择</h1>
+            <button class="btn-back" onclick="goBack()">返回</button>
+        </header>
+
+        <div class="lecture-info">
+            <h2>{{ lecture.name }}</h2>
+            <p><strong>主讲人：</strong>{{ lecture.speaker }}</p>
+            <p><strong>讲座时间：</strong>{{ lecture.lecture_start_time }}</p>
+        </div>
+
+        <div class="classroom-list">
+            {% for room in classrooms %}
+            <div class="classroom-item">
+                <div class="classroom-info">
+                    <div class="location">
+                        <span class="campus">{{ room.campus }}校区</span>
+                        <span class="building">{{ room.building }}</span>
+                        <span class="room-number">{{ room.room }}</span>
+                        {% if room.is_main %}
+                        <span class="main-room">主教室</span>
+                        {% endif %}
+                    </div>
+                    <div class="capacity">
+                        <span class="remaining{% if room.remaining <= 0 %} no-remaining{% endif %}">剩余名额：{% if room.remaining <= 0 %}已报满{% else %}{{ room.remaining }}/{{ room.capacity }}{% endif %}</span>
+                    </div>
+                </div>
+                <div class="classroom-actions">
+                    <button class="btn-enroll" 
+                            data-lecture-id="{{ lecture.id }}"
+                            data-room-id="{{ room.id }}"
+                            {% if room.remaining <= 0 %}disabled{% endif %}>
+                        {% if room.remaining > 0 %}确认报名{% else %}已报满{% endif %}
+                    </button>
+                    <button class="btn-cancel" 
+                            data-lecture-id="{{ lecture.id }}"
+                            data-room-id="{{ room.id }}"
+                            {% if room.remaining <= 0 %}disabled{% endif %}>
+                        取消报名
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/classroom.js') }}"></script>
+</body>
+</html>

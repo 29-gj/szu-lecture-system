@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史报名 - 深圳大学创新领航讲座</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>历史报名信息</h1>
+            <button class="btn-back" onclick="goBack()">返回</button>
+        </header>
+
+        <div class="history-content">
+            <div class="history-list" id="historyList">
+                <!-- 历史报名列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+</body>
+</html>
