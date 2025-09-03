@@ -1,8 +1,16 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from datetime import datetime, timedelta
 import json
+import os
 
-app = Flask(__name__)
+# 获取项目根目录
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+template_dir = os.path.join(project_root, 'templates')
+static_dir = os.path.join(project_root, 'static')
+
+app = Flask(__name__, 
+           template_folder=template_dir,
+           static_folder=static_dir)
 app.secret_key = 'szu_lecture_secret_key'
 
 # 模拟数据库存储
@@ -176,12 +184,11 @@ def init_data():
 
 def get_user_enrollments():
     """获取用户报名记录"""
-    # 基础报名数据，排除已取消的报名
     base_enrollments = [
         {
             'lecture_id': 1,
             'classroom_id': 1,
-            'status': 'enrolled',  # enrolled, attended, absent
+            'status': 'enrolled',
             'enroll_time': '2025-09-02 10:30:00',
             'seat_number': 'A12'
         },
@@ -201,13 +208,10 @@ def get_user_enrollments():
         }
     ]
     
-    # 过滤掉已取消的报名（即不在user_enrollment_status中的待参加活动）
     active_enrollments = []
     for enrollment in base_enrollments:
         lecture_id = enrollment['lecture_id']
-        # 如果是待参加活动（enrolled），检查是否在user_enrollment_status中
         if enrollment['status'] == 'enrolled':
-            # 如果不在user_enrollment_status中，说明已被取消，不返回
             if lecture_id not in user_enrollment_status:
                 continue
         active_enrollments.append(enrollment)
@@ -249,7 +253,6 @@ def get_user_enrollments_api():
     """获取用户报名信息"""
     enrollments = get_user_enrollments()
     
-    # 获取详细的讲座和教室信息
     detailed_enrollments = []
     for enrollment in enrollments:
         lecture = next((l for l in lectures_data if l['id'] == enrollment['lecture_id']), None)
@@ -272,11 +275,9 @@ def enroll_lecture():
     lecture_id = data.get('lecture_id')
     classroom_id = data.get('classroom_id')
     
-    # 检查是否已经报名
     if lecture_id in user_enrollment_status:
         return jsonify({'success': False, 'message': '您已经报名了该讲座'})
     
-    # 更新教室剩余名额
     for classroom in classrooms_data:
         if classroom['id'] == classroom_id:
             if classroom['remaining'] <= 0:
@@ -284,7 +285,6 @@ def enroll_lecture():
             classroom['remaining'] -= 1
             break
     
-    # 记录用户报名状态
     user_enrollment_status[lecture_id] = {
         'classroom_id': classroom_id,
         'enroll_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -299,21 +299,17 @@ def cancel_enroll():
     data = request.get_json()
     lecture_id = data.get('lecture_id')
     
-    # 检查是否已报名
     if lecture_id not in user_enrollment_status:
         return jsonify({'success': False, 'message': '您尚未报名该讲座'})
     
-    # 获取报名信息
     enrollment_info = user_enrollment_status[lecture_id]
     classroom_id = enrollment_info['classroom_id']
     
-    # 恢复教室剩余名额
     for classroom in classrooms_data:
         if classroom['id'] == classroom_id:
             classroom['remaining'] += 1
             break
     
-    # 删除用户报名状态
     del user_enrollment_status[lecture_id]
     
     return jsonify({'success': True, 'message': '取消报名成功'})
@@ -326,16 +322,17 @@ def classroom_selection(lecture_id):
         return redirect(url_for('index'))
     
     classrooms = [c for c in classrooms_data if c['lecture_id'] == lecture_id]
+    
     return render_template('classroom.html', lecture=lecture, classrooms=classrooms)
 
 @app.route('/profile')
 def profile():
-    """我的页面"""
+    """个人中心页面"""
     return render_template('profile.html')
 
 @app.route('/history')
 def history():
-    """历史报名页面"""
+    """历史记录页面"""
     return render_template('history.html')
 
 @app.route('/lecture/<int:lecture_id>')
@@ -350,10 +347,5 @@ def lecture_detail(lecture_id):
 # 初始化数据
 init_data()
 
-# Vercel 部署需要的入口点
-app_instance = app
-
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+# Vercel 入口点
+app_handler = app
