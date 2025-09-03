@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深圳大学创新领航讲座</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1>深圳大学创新领航讲座</h1>
+        </header>
+
+        <!-- 导航栏 -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="enrollment">报名板块</button>
+            <button class="nav-tab" data-tab="profile">我的</button>
+        </nav>
+
+        <!-- 报名板块 -->
+        <div class="tab-content active" id="enrollment">
+            <div class="sub-nav">
+                <button class="sub-tab active" data-filter="all">全部</button>
+                <button class="sub-tab" data-filter="enrolling">正在报名</button>
+                <button class="sub-tab" data-filter="not_started">未开始</button>
+            </div>
+            
+            <div class="lectures-container" id="lecturesContainer">
+                <!-- 讲座列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的板块 -->
+        <div class="tab-content" id="profile">
+            <div class="profile-header">
+                <h2>个人信息</h2>
+                <div class="user-stats" id="userStats">
+                    <!-- 用户统计信息将通过JavaScript动态加载 -->
+                </div>
+                <button class="btn-history" onclick="goToHistory()">历史报名信息</button>
+            </div>
+            
+            <div class="profile-sections">
+                <div class="section">
+                    <h3>待参加活动</h3>
+                    <div class="pending-activities" id="pendingActivities">
+                        <!-- 待参加活动将通过JavaScript动态加载 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

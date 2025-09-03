@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 - 深圳大学创新领航讲座</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>我的</h1>
+            <button class="btn-back" onclick="goBack()">返回</button>
+        </header>
+
+        <div class="profile-content">
+            <div class="profile-header">
+                <div class="user-stats" id="userInfo">
+                    <!-- 用户信息将通过JavaScript动态加载 -->
+                </div>
+                <button class="btn-history" onclick="goToHistory()">历史报名信息</button>
+            </div>
+
+            <div class="profile-sections">
+                <div class="section">
+                    <h3>待参加活动</h3>
+                    <div class="pending-activities" id="pendingList">
+                        <!-- 待参加活动列表 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+</body>
+</html>
